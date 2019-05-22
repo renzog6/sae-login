@@ -28,7 +28,7 @@
                <VBox.margin>
                   <Insets bottom="5.0" left="10.0" right="10.0" />
                </VBox.margin></Button>
-            <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" styleClass="button-home" text="Button">
+            <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" styleClass="button-home" text="Button" textFill="#752727">
                <VBox.margin>
                   <Insets bottom="5.0" left="10.0" right="10.0" />
                </VBox.margin></Button>

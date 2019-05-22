@@ -3,7 +3,6 @@ package ar.nex.login;
 import ar.nex.app.MainApp;
 import ar.nex.entity.Usuario;
 import ar.nex.service.JpaService;
-import ar.nex.util.DialogController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -11,7 +10,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,11 +17,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -117,15 +112,15 @@ public class LoginController implements Initializable {
 
             Usuario usuraio = (Usuario) query.getSingleResult();
             if (usuraio == null) {
-                DialogController.errorDialog("Login Error.", "El Usuario NO exite!!!");
+                LoginUtils.errorDialog("Login Error.", "El Usuario NO exite!!!");
             } else if (usuraio.getPassword().compareTo(boxPass.getText()) != 0) {
-                DialogController.errorDialog("Login Error.", "Contraseña Incorrecta!!!");
+                LoginUtils.errorDialog("Login Error.", "Contraseña Incorrecta!!!");
             } else {
                 MainApp.getInstance().setUsuario(usuraio);
                 this.close(e);
             }
         } catch (Exception ex) {
-            DialogController.errorDialog("Login Error.", "El Usuario NO exite!!!");
+            LoginUtils.errorDialog("Login Error.", "El Usuario NO exite!!!");
         }
 
     }
