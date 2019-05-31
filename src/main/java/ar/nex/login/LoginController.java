@@ -1,8 +1,8 @@
 package ar.nex.login;
 
-import ar.nex.app.MainApp;
 import ar.nex.entity.Usuario;
 import ar.nex.service.JpaService;
+import ar.nex.util.DialogController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -33,6 +33,22 @@ import javax.persistence.Query;
 public class LoginController implements Initializable {
 
     public LoginController() {
+        usuario = null;
+    }
+
+    private static Usuario usuario;
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public static void setUsuario(Usuario usuario) {
+        LoginController.usuario = usuario;
+    }
+
+    public static boolean isLogin() {
+        System.out.println("ar.nex.login.LoginController.isLogin()" + (usuario != null));
+        return usuario != null;
     }
 
     public Parent getRoot() {
@@ -58,7 +74,7 @@ public class LoginController implements Initializable {
     private TextField boxUser;
     @FXML
     private PasswordField boxPass;
- 
+
     private JpaService jpa;
 
     /**
@@ -110,22 +126,43 @@ public class LoginController implements Initializable {
             Query query = em.createQuery("SELECT u FROM Usuario u WHERE u.username = :username");
             query.setParameter("username", boxUser.getText());
 
-            Usuario usuraio = (Usuario) query.getSingleResult();
-            if (usuraio == null) {
-                LoginUtils.errorDialog("Login Error.", "El Usuario NO exite!!!");
-            } else if (usuraio.getPassword().compareTo(boxPass.getText()) != 0) {
-                LoginUtils.errorDialog("Login Error.", "Contraseña Incorrecta!!!");
+            Usuario usr = (Usuario) query.getSingleResult();
+            if (usr == null) {
+                DialogController.errorDialog("Login Error.", "El Usuario NO exite!!!");
+            } else if (usr.getPassword().compareTo(boxPass.getText()) != 0) {
+                DialogController.errorDialog("Login Error.", "Contraseña Incorrecta!!!");
             } else {
-                MainApp.getInstance().setUsuario(usuraio);
-                this.close(e);
+                setUsuario(usr);
+                closeStage();
+                showHome();
             }
         } catch (Exception ex) {
-            LoginUtils.errorDialog("Login Error.", "El Usuario NO exite!!!");
+            DialogController.errorDialog("Login Error.", "El Usuario NO exite!!!");
         }
 
     }
 
+    private void showHome() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/Home.fxml"));
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);            
+            scene.getStylesheets().add("/fxml/Home.css");
+            stage.setScene(scene);
+            stage.setTitle("SAE-App");
+            stage.setMaximized(true);            
+            stage.show();
+        } catch (Exception e) {
+            DialogController.showException(e);
+        }
+    }
+
+    private void closeStage() {
+        ((Stage) boxUser.getScene().getWindow()).close();
+    }
+
     public void close(ActionEvent ev) {
+        setUsuario(null);
         Stage s = (Stage) ((Node) ev.getSource()).getScene().getWindow();
         s.close();
     }
